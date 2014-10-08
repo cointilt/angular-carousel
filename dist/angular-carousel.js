@@ -1,6 +1,6 @@
 /**
  * Angular Carousel - Mobile friendly touch carousel for AngularJS
- * @version v0.2.4 - 2014-07-25
+ * @version v0.2.5 - 2014-10-08
  * @link http://revolunet.github.com/angular-carousel
  * @author Julien Bouquillon <julien@revolunet.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -379,10 +379,21 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                         scope.carouselBufferIndex = bufferIndex;
                     }
 
+                    function broadcastSwipeStart (index) {
+                        $rootScope.$broadcast('rnCarouselSwipeStart', index);
+                    }
+
+                    function broadcastSwipeEnd (index) {
+                        $rootScope.$broadcast('rnCarouselSwipeEnd', index);
+                    }
+
                     function goToSlide(i, animate) {
                         if (isNaN(i)) {
                             i = scope.carouselIndex;
                         }
+
+                        broadcastSwipeStart(i);
+
                         if (animate) {
                             // simulate a swipe so we have the standard animation
                             // used when external binding index is updated or touch canceed
@@ -462,6 +473,7 @@ angular.module('angular-carousel').run(['$templateCache', function($templateCach
                     }
 
                     function swipeEnd(coords, event, forceAnimation) {
+                        broadcastSwipeEnd(scope.carouselIndex);
                         //console.log('swipeEnd', 'scope.carouselIndex', scope.carouselIndex);
 
                         // Prevent clicks on buttons inside slider to trigger "swipeEnd" event on touchend/mouseup

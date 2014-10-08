@@ -255,10 +255,21 @@
                         scope.carouselBufferIndex = bufferIndex;
                     }
 
+                    function broadcastSwipeStart (index) {
+                        $rootScope.$broadcast('rnCarouselSwipeStart', index);
+                    }
+
+                    function broadcastSwipeEnd (index) {
+                        $rootScope.$broadcast('rnCarouselSwipeEnd', index);
+                    }
+
                     function goToSlide(i, animate) {
                         if (isNaN(i)) {
                             i = scope.carouselIndex;
                         }
+
+                        broadcastSwipeStart(i);
+
                         if (animate) {
                             // simulate a swipe so we have the standard animation
                             // used when external binding index is updated or touch canceed
@@ -338,6 +349,7 @@
                     }
 
                     function swipeEnd(coords, event, forceAnimation) {
+                        broadcastSwipeEnd(scope.carouselIndex);
                         //console.log('swipeEnd', 'scope.carouselIndex', scope.carouselIndex);
 
                         // Prevent clicks on buttons inside slider to trigger "swipeEnd" event on touchend/mouseup
