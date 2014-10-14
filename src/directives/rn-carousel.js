@@ -252,6 +252,14 @@
                             goToSlide(index, slideOptions);
                         };
 
+                        function broadcastSwipeStart (index) {
+                            $rootScope.$broadcast('rnCarouselSwipeStart', index);
+                        }
+    
+                        function broadcastSwipeEnd (index) {
+                            $rootScope.$broadcast('rnCarouselSwipeEnd', index);
+                        }
+
                         function goToSlide(index, slideOptions) {
                             if (carouselId===1) {
                                 console.log('goToSlide', arguments, animating);
@@ -260,6 +268,8 @@
                             if (index === undefined) {
                                 index = scope.carouselIndex;
                             }
+
+                            broadcastSwipeStart(i);
 
                             slideOptions = slideOptions || {};
                             if (slideOptions.animate === false || options.transitionType === 'none') {
@@ -405,6 +415,8 @@
                         }
 
                         function swipeEnd(coords, event, forceAnimation) {
+                            broadcastSwipeEnd(scope.carouselIndex);
+
                             //  console.log('swipeEnd', 'scope.carouselIndex', scope.carouselIndex);
                             // Prevent clicks on buttons inside slider to trigger "swipeEnd" event on touchend/mouseup
                             if (event && !swipeMoved) {
